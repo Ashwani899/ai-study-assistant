@@ -1,56 +1,44 @@
 # AI Study Assistant
 
-An intelligent study companion for college students. Upload lecture PDFs, PPTs, or notes and get AI-powered summaries, quizzes, flashcards, notes, formula sheets, revision plans, and an interactive Q&A chatbot.
+A full-stack study companion prototype for turning course documents into summaries, quizzes, flashcards, structured notes, formula sheets, revision plans, and document-grounded Q&A.
 
-![StudyAI](https://img.shields.io/badge/StudyAI-Campus-6366f1?style=for-the-badge)
-![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-412991?style=flat-square&logo=openai)
+> **Project status:** Learning/portfolio prototype. Generated answers and study materials can contain errors. Check them against the original lecture material and instructor guidance.
 
 ## Features
 
-| Feature | Description |
+| Capability | Purpose |
 |---|---|
-| **PDF/PPT Upload** | Drag-and-drop upload with instant text extraction |
-| **AI Summary** | Concise, structured summaries of any document |
-| **Smart Quiz** | Auto-generated MCQs with explanations |
-| **Flashcards** | Interactive flip cards for active recall |
-| **Lecture Notes** | Structured notes from slides with key takeaways |
-| **Formula Sheet** | Extracted formulas, equations, and definitions |
-| **Important Points** | Highlighted key concepts and must-know facts |
-| **Interview Prep** | Generated interview questions from the material |
-| **Revision Plan** | Day-by-day study schedule based on content |
-| **Ask Anything** | Chat with your document — ask questions, get answers |
+| PDF, PPT, and DOCX upload | Extract text from course material |
+| Summaries and notes | Organize key ideas and explanations |
+| Quizzes and flashcards | Support retrieval practice and active recall |
+| Formula sheets and key points | Surface definitions and equations |
+| Revision plans | Turn material into a suggested study schedule |
+| Document Q&A | Ask questions about an uploaded document |
 
-## Tech Stack
+## Stack
 
-| Layer | Technology |
+| Layer | Technologies |
 |---|---|
-| Frontend | React 18 + TypeScript + Vite |
-| Styling | Tailwind CSS v4 |
-| Backend | Python 3.11+ + FastAPI |
-| AI | OpenAI API (GPT-4o-mini) |
-| Database | SQLite (SQLAlchemy async) |
-| File Parsing | PyMuPDF (PDF), python-pptx (PPT), python-docx (DOCX) |
+| Frontend | React, TypeScript, Vite, Tailwind CSS |
+| Backend | Python, FastAPI, Uvicorn |
+| AI | OpenAI API |
+| Database | SQLAlchemy async, SQLite |
+| Parsing | PyMuPDF, python-pptx, python-docx |
 
-## Getting Started
+## Run locally
 
-### Prerequisites
-
-- Node.js 18+ and npm
-- Python 3.11+
-- OpenAI API key
+Requirements: Python 3.11+, Node.js, npm.
 
 ### Backend
 
 ```bash
 cd backend
-python -m venv venv
-venv\Scripts\activate          # Windows
-# source venv/bin/activate     # macOS/Linux
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env           # Add your OPENAI_API_KEY
+cp .env.example .env
+# Add your own API key to .env.
 uvicorn app.main:app --reload --port 8000
 ```
 
@@ -58,31 +46,55 @@ uvicorn app.main:app --reload --port 8000
 
 ```bash
 cd frontend
-npm install
-npm run dev                    # http://localhost:5173
+npm ci
+npm run dev
 ```
 
-## API Endpoints
+The Vite app is expected at `http://localhost:5173`; the backend health endpoint is `GET /api/health` on port 8000. Check the frontend API client and Vite configuration for the exact proxy/base URL.
 
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/upload` | Upload PDF/PPT/DOCX |
-| GET | `/api/document/{id}` | Get document metadata |
-| POST | `/api/summarize/{id}` | Generate summary |
-| POST | `/api/quiz/{id}` | Generate quiz questions |
-| POST | `/api/flashcards/{id}` | Generate flashcards |
-| POST | `/api/notes/{id}` | Generate structured notes |
-| POST | `/api/formulas/{id}` | Extract formula sheet |
-| POST | `/api/important/{id}` | Extract important points |
-| POST | `/api/interview/{id}` | Generate interview questions |
-| POST | `/api/revision/{id}` | Generate revision plan |
-| POST | `/api/chat/{id}` | Ask a question about the document |
+## Environment
 
-## Deployment
+Backend `.env`:
 
-- **Frontend**: Vercel — connect your GitHub repo
-- **Backend**: Render — use `render.yaml`, set env vars
+```env
+OPENAI_API_KEY=
+DATABASE_URL=sqlite+aiosqlite:///./studyai.db
+FRONTEND_URL=http://localhost:5173
+```
+
+Do not commit API keys, uploaded course documents, database files, or user data.
+
+## Repository layout
+
+```text
+frontend/   React + TypeScript application
+backend/
+  app/
+    routes/     upload, generation, and chat endpoints
+    services/   extraction and AI logic
+    main.py     FastAPI application
+    database.py async database setup
+    models.py   data models
+  requirements.txt
+README.md
+```
+
+## API surface
+
+The backend currently registers upload, generate, and chat routers under `/api`, plus `GET /api/health`. The route modules define the current request and response contracts.
+
+## Deployment and security
+
+A Render blueprint is included for the API, and the frontend contains Vercel configuration. Set `OPENAI_API_KEY` and `FRONTEND_URL` as platform environment variables. The API must use a strict CORS allow-list of trusted frontend origins; wildcard origins should not be combined with credentialed requests.
+
+Before a public launch, add upload size/type validation, rate limits, authentication or per-user data isolation, document retention/deletion controls, and tests for malformed or oversized files.
+
+## Limitations
+
+- AI output may hallucinate or omit information; cross-check it against the source document.
+- Revision plans are suggestions, not personalized academic advice.
+- Do not upload confidential, copyrighted, or personally identifying material unless you have permission and an appropriate privacy arrangement.
 
 ## License
 
-MIT
+MIT (see repository license file).
