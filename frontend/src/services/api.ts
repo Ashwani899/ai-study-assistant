@@ -10,58 +10,58 @@ const api = axios.create({
 export const uploadFile = async (file: File): Promise<DocumentInfo> => {
   const formData = new FormData();
   formData.append('file', file);
-  const { data } = await api.post('/api/upload', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  const { data } = await api.post('/api/upload', formData);
   return data;
 };
 
 export const getDocument = async (id: string): Promise<DocumentInfo> => {
-  const { data } = await api.get(`/api/documents/${id}`);
+  const { data } = await api.get(`/api/document/${id}`);
   return data;
 };
 
 export const generateSummary = async (id: string): Promise<{ summary: string }> => {
-  const { data } = await api.post(`/api/documents/${id}/summary`);
+  const { data } = await api.post(`/api/summarize/${id}`);
   return data;
 };
 
 export const generateQuiz = async (id: string, numQuestions: number = 5): Promise<{ questions: QuizQuestion[] }> => {
-  const { data } = await api.post(`/api/documents/${id}/quiz`, { num_questions: numQuestions });
+  const { data } = await api.post(`/api/quiz/${id}`, null, {
+    params: { num_questions: numQuestions },
+  });
   return data;
 };
 
 export const generateFlashcards = async (id: string): Promise<{ cards: Flashcard[] }> => {
-  const { data } = await api.post(`/api/documents/${id}/flashcards`);
+  const { data } = await api.post(`/api/flashcards/${id}`);
   return data;
 };
 
 export const generateNotes = async (id: string): Promise<{ notes: string }> => {
-  const { data } = await api.post(`/api/documents/${id}/notes`);
+  const { data } = await api.post(`/api/notes/${id}`);
   return data;
 };
 
 export const generateFormulas = async (id: string): Promise<{ formulas: string }> => {
-  const { data } = await api.post(`/api/documents/${id}/formulas`);
+  const { data } = await api.post(`/api/formulas/${id}`);
   return data;
 };
 
 export const generateImportant = async (id: string): Promise<{ points: string }> => {
-  const { data } = await api.post(`/api/documents/${id}/important`);
+  const { data } = await api.post(`/api/important/${id}`);
   return data;
 };
 
 export const generateInterview = async (id: string): Promise<{ questions: InterviewQuestion[] }> => {
-  const { data } = await api.post(`/api/documents/${id}/interview`);
+  const { data } = await api.post(`/api/interview/${id}`);
   return data;
 };
 
 export const generateRevision = async (id: string): Promise<{ plan: string }> => {
-  const { data } = await api.post(`/api/documents/${id}/revision`);
+  const { data } = await api.post(`/api/revision/${id}`);
   return data;
 };
 
 export const chatWithDoc = async (id: string, message: string): Promise<{ answer: string; sources: string[] }> => {
-  const { data } = await api.post(`/api/documents/${id}/chat`, { message });
+  const { data } = await api.post(`/api/chat/${id}`, { message });
   return data;
 };
