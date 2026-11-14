@@ -46,7 +46,9 @@ async def quiz(
 ):
     doc = await get_doc(doc_id, db)
     if doc.quiz and not regenerate:
-        return {"questions": json.loads(doc.quiz)}
+        cached_questions = json.loads(doc.quiz)
+        if isinstance(cached_questions, list) and len(cached_questions) == num_questions:
+            return {"questions": cached_questions}
 
     try:
         questions = await generate_quiz(doc.raw_text, num_questions)
