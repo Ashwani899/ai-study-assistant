@@ -114,4 +114,4 @@ AI output may hallucinate or omit information. Do not upload confidential, copyr
 
 ## License
 
-MIT (see repository license file).
+No license file is currently included. Do not assume reuse or redistribution rights until a license is explicitly added.
